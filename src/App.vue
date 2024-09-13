@@ -1,185 +1,190 @@
 <template>
   <div>
+    <!-- Toast para notificaciones -->
     <pv-toast></pv-toast>
+
+    <!-- Header -->
     <header v-if="showHeader">
-      <pv-toolbar class="bg-red">
+      <pv-toolbar class="header-bar">
         <template #start>
+          <!-- Botón de Menú -->
           <pv-button
               class="p-button-text text-white"
               icon="pi pi-bars"
               @click="drawer = !drawer"
           ></pv-button>
-          <img
-              alt="user header"
-              src="https://upc-coders.github.io/MapVet-LandingPage-Final/assets/images/logo2.png"
-              style="width: 10%; height: auto;"
-          />
-          <h1>VetCare</h1>
+
+          <!-- Logo redirige al Home -->
+          <router-link to="/home">
+            <img
+                alt="user header"
+                src="https://upc-coders.github.io/MapVet-LandingPage-Final/assets/images/logo2.png"
+                class="header-logo"
+            />
+          </router-link>
+
+          <!-- Título del sitio -->
+          <h1 class="header-title">VetCare</h1>
         </template>
+
+        <!-- Menú de navegación -->
         <template #end>
-          <div class="flex-column">
-            <!-- Mostrar solo las opciones específicas para la ruta /login -->
-            <router-link
-                v-if="showFaqLink"
-                to="/faq"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >
-                Faq
-              </pv-button>
+          <nav class="nav-links">
+            <router-link v-if="showFaqLink" to="/faq">
+              <pv-button icon="pi pi-question-circle" class="header-btn" label="FAQ" />
             </router-link>
-            <router-link
-                v-if="showPetProfileLink"
-                to="/petprofile"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >
-                PetProfile
-              </pv-button>
+            <router-link v-if="showPetProfileLink" to="/petprofile">
+              <pv-button icon="pi pi-paw" class="header-btn" label="PetProfile" />
             </router-link>
-            <router-link
-                v-if="showRecommendationsLink"
-                to="/about"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >
-                Recommendations
-              </pv-button>
+            <router-link v-if="showRecommendationsLink" to="/about">
+              <pv-button icon="pi pi-thumbs-up" class="header-btn" label="Recommendations" />
             </router-link>
-            <router-link
-                v-if="showUserProfileLink"
-                to="/profile"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >
-                Profile
-              </pv-button>
+            <router-link v-if="showUserProfileLink" to="/profile">
+              <pv-button icon="pi pi-user" class="header-btn" label="Profile" />
             </router-link>
-
-
-            <router-link
-                v-if="showMapLink"
-                to="/map"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >
-                Map
-              </pv-button>
+            <router-link v-if="showMapLink" to="/map">
+              <pv-button icon="pi pi-map-marker" class="header-btn" label="Map" />
             </router-link>
-            <router-link
-                v-if="showStoreLink"
-                to="/store"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >Store</pv-button>
+            <router-link v-if="showStoreLink" to="/store">
+              <pv-button icon="pi pi-shopping-cart" class="header-btn" label="Store" />
             </router-link>
-            <router-link
-                v-if="showAppointmentLink"
-                to="/appointment"
-                custom
-                v-slot="{ navigate, href }"
-            >
-              <pv-button
-                  class="p-button-text text-white header-link-home"
-                  :href="href"
-                  @click="navigate"
-              >Appointment</pv-button>
+            <router-link v-if="showAppointmentLink" to="/appointment">
+              <pv-button icon="pi pi-calendar" class="header-btn" label="Appointment" />
             </router-link>
-
-          </div>
+          </nav>
         </template>
       </pv-toolbar>
     </header>
-    <pv-sidebar v-model:visible="drawer"></pv-sidebar>
+
+    <!-- Sidebar -->
+    <pv-sidebar v-model:visible="drawer">
+      <!-- Contenido del sidebar -->
+      <div class="sidebar-content">
+        <ul class="sidebar-list">
+          <li v-for="item in items" :key="item.label" class="sidebar-item">
+            <router-link :to="item.to">
+              <span>{{ item.label }}</span> <!-- Ahora muestra correctamente el valor de item.label -->
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </pv-sidebar>
+
+    <!-- Contenido principal -->
     <RouterView />
   </div>
 </template>
 
 <script>
 export default {
-  name: "app",
+  name: "App",
   data() {
     return {
       drawer: false,
       items: [
-        { label: "PetProfile", to: "/petprofile" },
+        { label: "Pets", to: "/petprofile" },
         { label: "Map", to: "/map" },
         { label: "Recommendations", to: "/about" },
         { label: "Appointments", to: "/appointment" },
         { label: "Store", to: "/store" },
         { label: "Faq", to: "/faq" },
-        { label: "Register", to: "/register" },
-        { label: "Login", to: "/login" },
         { label: "Profile", to: "/profile" },
       ],
     };
   },
   computed: {
     showHeader() {
-      const allowedRoutes = ["/petprofile", "/map", "/home", "/about","/store","/faq","/profile", "/appointment"];
+      const allowedRoutes = [
+        "/petprofile",
+        "/map",
+        "/home",
+        "/about",
+        "/store",
+        "/faq",
+        "/profile",
+        "/appointment",
+      ];
       return allowedRoutes.includes(this.$route.path);
     },
-    showMapLink() {
-      return this.$route.path === "/petprofile" || "/about" || "/store" || "/faq" || "/profile"|| "/appointment";
-    },
-    showStoreLink() {
-      return this.$route.path === "/petprofile" || "/about" || "/map" || "/faq" || "/profile"|| "/appointment";
-    },
-    showFaqLink() {
-      return this.$route.path === "/petprofile" || "/about" || "/map" || "/store" || "/profile"|| "/appointment";
-    },
-    showPetProfileLink() {
-      return this.$route.path === "/faq" || "/about" || "/map" || "/store" || "/profile"|| "/appointment";
-    },
-    showRecommendationsLink() {
-      return this.$route.path === "/faq" || "/petprofile" || "/map" || "/store" || "/profile"|| "/appointment";
-    },
-    showUserProfileLink() {
-      return this.$route.path === "/faq" || "/petprofile" || "/map" || "/store" || "/about"|| "/appointment";
-    },
-    showAppointmentLink(){
-      return this.$route.path ==="/faq" || "/petprofile" || "/map" || "/store" || "/about" || "/appointment";
-    }
   },
 };
 </script>
 
 <style scoped>
-.bg-red {
+/* Header */
+.header-bar {
   background-color: #31b4a7;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.header-link-home {
-  margin-right: 30px;
+.header-logo {
+  cursor: pointer;
+  width: 50px;
+  height: auto;
+  margin-right: 15px;
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.1);
+}
+
+.header-title {
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.header-btn {
+  color: white;
+  font-weight: bold;
+  background: transparent;
+}
+
+.header-btn:hover {
+  color: #ffdd57;
+}
+
+/* Sidebar */
+.sidebar-content {
+  padding: 20px;
+}
+
+.sidebar-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar-item {
+  margin-bottom: 15px;
+  font-size: 18px;
+  display: block;
+  text-align: left;
+}
+
+.sidebar-item a {
+  color: #31b4a7;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 10px 15px;
+  display: block;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-item a:hover {
+  background-color: #31b4a7;
+  color: #ffffff;
 }
 </style>
